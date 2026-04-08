@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -22,6 +23,10 @@ namespace TestAutomation.Tests.Inicio
 
             var normalLoadWeb = driver.FindElement(By.Id("NormalWeb"));
             normalLoadWeb.Click();
+
+            var titulo = driver.FindElement(By.CssSelector("h1"));
+            titulo.Text.Should().Be("Normal load website");
+            //driver.Quit();
         }
 
     }
