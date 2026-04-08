@@ -19,6 +19,9 @@ namespace TestAutomation.Tests.Inicio
             var driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             driver.Url = "https://curso.testautomation.es";
+
+            var normalLoadWeb = driver.FindElement(By.Id("NormalWeb"));
+            normalLoadWeb.Click();
         }
 
     }
