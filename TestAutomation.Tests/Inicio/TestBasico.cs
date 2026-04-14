@@ -54,9 +54,12 @@ namespace TestAutomation.Tests.Inicio
             driver.Url = "https://curso.testautomation.es"; // para navegar a la URL especificada que vamos a testear
             var slowLoadTextWeb = driver.FindElement(By.Id("SlowSpeedTextWeb")); // para ubicar por el id el elemento del sitio web que queremos interactuar, en este caso el botón "SlowSpeedTextWeb"
             slowLoadTextWeb.Click();
+            Thread.Sleep(1500); // para esperar 1.5 segundos antes de continuar con la siguiente acción, esto es útil para esperar a que se cargue completamente la página después de hacer clic en el botón "SlowSpeedTextWeb"s
             var titulo = driver.FindElement(By.Id("title")); // para ubicar por el id el elemento del sitio web que queremos interactuar, en este caso el título de la página después de hacer clic en el botón "SlowSpeedTextWeb"
 
             titulo.Text.Should().Be("Slow speed text website"); // para obtener el texto del elemento y compararlo con el valor esperado, en este caso "Slow speed text website"
+            //slowLoadTextWeb.Click(); // para hacer clic nuevamente en el botón "SlowSpeedTextWeb", esto es útil para volver a cargar la página y verificar que el título se actualice correctamente después de hacer clic en el botón
+            //var titulo = driver.FindElement(By.Id("title"));
             driver.Quit(); // para liberar recursos, cerrar el navegador al finalizar la prueba
 
 
