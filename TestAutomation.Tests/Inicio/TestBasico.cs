@@ -2,15 +2,9 @@
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-//using OpenQA.Selenium.Firefox;
 
 namespace TestAutomation.Tests.Inicio
 {
@@ -18,115 +12,141 @@ namespace TestAutomation.Tests.Inicio
     public class TestBasico
     {
         #pragma warning disable NUnit1032
-        ChromeDriver driver;
+        private ChromeDriver driver;
 
         [SetUp]
         public void SetUp()
         {
-            //Todo el contenido que está dentro de este bloque
-            //se ejecutará antes de cualquier método
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+            // Desactivamos implicit wait para usar solo esperas explícitas
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.Zero;
+
             driver.Url = "https://curso.testautomation.es";
-            var titulo = driver.FindElement(By.Id("title"));
-            titulo.Text.Should().Be("Slow load website");
         }
 
         [TearDown]
         public void TearDown()
         {
-            driver.Quit();
+            if (driver == null) return;
+
+            try
+            {
+                driver.Quit();
+            }
+            catch (Exception ex)
+            {
+                TestContext.WriteLine($"Error cerrando driver: {ex.Message}");
+            }
+            finally
+            {
+                driver.Dispose();
+                driver = null;
+            }
         }
 
         [Test]
         public void TestBasicWebPage()
         {
-            /*
-            var driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            driver.Url = "https://curso.testautomation.es";
-            */
-
-            var normalLoadWeb = driver.FindElement(By.Id("NormalWeb"));
+            var normalLoadWeb = WaitUntilElementClickable(By.Id("NormalWeb"), TimeSpan.FromSeconds(10));
             normalLoadWeb.Click();
 
-            var titulo = driver.FindElement(By.CssSelector("h1"));
-            titulo.Text.Should().Be("Normal load website"); //Para obtener el texto del elemento y compararlo con el valor esperado
+            var titulo = WaitUntilElementVisible(By.CssSelector("h1"), TimeSpan.FromSeconds(5));
+            titulo.Text.Should().Be("Normal load website");
         }
 
         [Test]
         public void TestSlowLoadWebPage()
         {
-            /*
-            var driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();  // sentencia para maximizar la ventana del navegador
-            driver.Url = "https://curso.testautomation.es"; // sentencia para navegar a la URL especificada que vamos a testear
-            */
+            var slowLoadWeb = WaitUntilElementClickable(By.Id("SlowLoadWeb"), TimeSpan.FromSeconds(10));
+            slowLoadWeb.Click();
 
-            var sloLoadWeb = driver.FindElement(By.Id("SlowLoadWeb")); // para ubicar por el id el elemento del sitio web que queremos interactuar
-            sloLoadWeb.Click();
+            WaitUntilElementTextEquals(By.Id("title"), "Slow load website", TimeSpan.FromSeconds(10));
+
             var titulo = driver.FindElement(By.Id("title"));
-
             titulo.Text.Should().Be("Slow load website");
-
-            sloLoadWeb.Click();
-            Thread.Sleep(3000); // para esperar 5 segundos antes de continuar con la siguiente acción, esto es útil para esperar a que se cargue completamente la página después de hacer clic en el botón "SlowLoadWeb"
         }
 
         [Test]
         public void TestSlowLoadTextWebPage()
         {
-            /*
-            var driver = new ChromeDriver();
-            driver.Manage().Window.Maximize(); // sentencia para maximizar a dimensión completa la ventana del navegador
-            driver.Url = "https://curso.testautomation.es"; // para navegar a la URL especificada que vamos a testear
-            */
-
-            var slowLoadTextWeb = driver.FindElement(By.Id("SlowSpeedTextWeb")); // para ubicar por el id el elemento del sitio web que queremos interactuar, en este caso el botón "SlowSpeedTextWeb"
+            var slowLoadTextWeb = WaitUntilElementClickable(By.Id("SlowSpeedTextWeb"), TimeSpan.FromSeconds(10));
             slowLoadTextWeb.Click();
-            Thread.Sleep(1500); // para esperar 1.5 segundos antes de continuar con la siguiente acción, esto es útil para esperar a que se cargue completamente la página después de hacer clic en el botón "SlowSpeedTextWeb"s
-            var titulo = driver.FindElement(By.Id("title")); // para ubicar por el id el elemento del sitio web que queremos interactuar, en este caso el título de la página después de hacer clic en el botón "SlowSpeedTextWeb"
 
-            titulo.Text.Should().Be("Slow speed text website"); // para obtener el texto del elemento y compararlo con el valor esperado, en este caso "Slow speed text website"
-            //slowLoadTextWeb.Click(); // para hacer clic nuevamente en el botón "SlowSpeedTextWeb", esto es útil para volver a cargar la página y verificar que el título se actualice correctamente después de hacer clic en el botón
-            //var titulo = driver.FindElement(By.Id("title"));
+            WaitUntilElementTextEquals(By.Id("title"), "Slow load website", TimeSpan.FromSeconds(10));
 
-            WaitForCondition(() => IsTextElement(titulo, "Slow load website"));// es una expresion lambda.
+            var titulo = driver.FindElement(By.Id("title"));
+            titulo.Text.Should().Be("Slow load website");
         }
 
+        // =========================
+        // MÉTODOS DE ESPERA
+        // =========================
+
+        private IWebElement WaitUntilElementClickable(By locator, TimeSpan timeout)
+        {
+            var wait = new WebDriverWait(driver, timeout);
+            return wait.Until(d =>
+            {
+                var element = d.FindElement(locator);
+                return (element != null && element.Displayed && element.Enabled) ? element : null;
+            });
+        }
+
+        private IWebElement WaitUntilElementVisible(By locator, TimeSpan timeout)
+        {
+            var wait = new WebDriverWait(driver, timeout);
+            return wait.Until(d =>
+            {
+                var element = d.FindElement(locator);
+                return element.Displayed ? element : null;
+            });
+        }
+
+        private void WaitUntilElementTextEquals(By locator, string expectedText, TimeSpan timeout)
+        {
+            var wait = new WebDriverWait(driver, timeout);
+            wait.Until(d =>
+            {
+                try
+                {
+                    var text = d.FindElement(locator).Text;
+                    return text.Equals(expectedText);
+                }
+                catch
+                {
+                    return false;
+                }
+            });
+        }
+
+        // Método alternativo genérico (lo dejamos porque está bien implementado)
         private void WaitForCondition(Func<bool> condition, int msTimeout = 4000)
         {
-            // este codigo es muy util para controlar l
-            var stopWatch = new Stopwatch(); // definimos una variable de tipo Stopwatch
-            stopWatch.Start(); //iniciamos la variable.
-            Exception? ex;
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            Exception ex = null;
+
             do
             {
                 try
                 {
                     ex = null;
-                    if (condition())
-                    {
-                        return;
-                    }
+                    if (condition()) return;
                 }
                 catch (Exception e)
                 {
                     ex = e;
                 }
             } while (stopWatch.ElapsedMilliseconds < msTimeout);
-            stopWatch.Stop();
-            if (ex != null)
-            {
-                throw new TimeoutException("Error executing the condition", ex);
-            }
-            throw new TimeoutException("Error the condition was false", ex);// si la condicion es fase siempre
-        }
 
-        private bool IsTextElement(IWebElement element, string expectedText)
-        {
-            return element.Text.Equals(expectedText); // para comparar el texto del elemento con el valor esperado
+            stopWatch.Stop();
+
+            if (ex != null)
+                throw new TimeoutException("Error executing the condition", ex);
+
+            throw new TimeoutException("Condition was false");
         }
     }
 }
