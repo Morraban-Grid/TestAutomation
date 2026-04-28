@@ -16,6 +16,7 @@ namespace TestAutomation.Tests.Selectores
         [SetUp]
         public void SetUp()
         {
+            // Instanciamos una clase de tipo ChromeDriver
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
 
