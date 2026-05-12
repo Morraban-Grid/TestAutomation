@@ -9,7 +9,7 @@ using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
 
 namespace TestAutomation.Tests.PageObjectPattern.Helpers
 {
-    public static class FruitHelper
+    public class FruitHelper
     {
         public static IList<FruitWebElement> Parse(IList<IWebElement> fruits)
         {
@@ -26,5 +26,14 @@ namespace TestAutomation.Tests.PageObjectPattern.Helpers
             var price = decimal.Parse(element.Price.Split(' ')[0]);
             return new FruitModel(element.Name, price, element.Description);
         }
+
+        public IList<FruitWebElement> DisplayedFruitWebElements()
+        {
+            return FruitHelper.Parse(DisplayedFruits);
+        }
+        // Método que muestre la lista de frutas
+        public IList<FruitModel> DisplayedFruitModel() => FruitHelper.Parse(DisplayedFruitWebElements());
+
+
     }
 }

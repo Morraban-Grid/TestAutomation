@@ -16,13 +16,15 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
 
         private readonly IWebDriver driver;
 
+        private List<IWebElement> DisplayedFruits => driver.FindElements(By.ClassName("fruit")).Where(fruit => fruit.Displayed).ToList();
+
         // definimos el contructor
         public HomePageObject(IWebDriver driver)
         {
             this.driver = driver;
         }
 
-        private List<IWebElement> DisplayedFruits => driver.FindElements(By.ClassName("fruit")).Where(fruit => fruit.Displayed).ToList();
+        
 
         //Mostramos la lista de frutas
         public IList<FruitWebElement> DisplayedFruitWebElements()
@@ -30,6 +32,8 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
             return FruitHelper.Parse(DisplayedFruits);
         }
 
+        // Método que muestre la lista de frutas
+        public IList<FruitModel> DisplayedFruitModel() => FruitHelper.Parse(DisplayedFruitWebElements());
 
     }
 
