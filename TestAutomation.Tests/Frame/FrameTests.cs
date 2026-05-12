@@ -31,11 +31,13 @@ namespace TestAutomation.Tests.Frame
         public void FrameTest()
         {
             /*
-            driver.FindElement(By.Id("DifferentFrames"));
+            driver.FindElement(By.Id("DifferentFrames")).Click();
             var webElement = driver.FindElement(By.CssSelector("h2"));
             */
+            
 
-
+            
+            
             // Hacemos click en la primera sección de la página de inicio
             // y luego vamos a la segunda sección, que es la de los frames
             driver.FindElement(By.Id("DifferentFrames")).Click();
@@ -51,7 +53,9 @@ namespace TestAutomation.Tests.Frame
             driver.SwitchTo().DefaultContent();
             driver.SwitchTo().Frame(1);
             // Obtenemos el valor del texto
-            var webElementRight = driver.FindElement(By.CssSelector("h2"));
+            var webElementRight = driver.FindElement(By.CssSelector("h2")).Text;
+            
+            
         }
     }
 }
