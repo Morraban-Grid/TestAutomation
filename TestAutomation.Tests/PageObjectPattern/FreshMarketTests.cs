@@ -1,14 +1,35 @@
-﻿using System;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TestAutomation.Tests.PageObjectPattern.Models;
+using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestAutomation.Tests.PageObjectPattern
 {
     public class FreshMarketTests
     {
+        #pragma warning disable NUnit1032
+        IWebDriver driver;
+
+        [SetUp]
+        public void SetUp()
+        {
+            driver = new ChromeDriver();
+            driver.Manage().Window.Maximize();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+            driver.Url = "https://curso.testautomation.es/FruitVegetablesShopWeb/index.html";
+        }
+
+        [TearDown]
+        public void TearDownTest()
+        {
+            driver.Quit();
+        }
+
         /// <summary>
         /// Verify that the next provided fruits are displayed into the shop.
         /// Please check that the content of all fruits are correct.
@@ -47,7 +68,11 @@ namespace TestAutomation.Tests.PageObjectPattern
                 new FruitModel("Blackberry", 2.80m, "Sweet and juicy blackberries for desserts and smoothies."),
                 new FruitModel("Cranberry", 3.20m, "Tart and antioxidant-packed cranberries for holiday dishes."),
             };
+
+            var homePage = new HomePageObject(driver); // Obtenemos la página donde están las frutas
+            var displayedFruits = homePage.DisplayedFruitWebElements(); // Obtenemos 12 frutas de la página
+            var displayedOfDisplayedFruits = displayedFruits.Count();// Pasinamos dicho número a una variable para poder comparar con el número de frutas que tenemos en la lista de frutas esperadas
+        }
     }
-}
 
 }
