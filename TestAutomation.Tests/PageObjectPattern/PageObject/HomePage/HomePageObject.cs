@@ -14,7 +14,14 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
         //definiendo el driver
         //para las frutas que seran una lista
 
-        private readonly IWebDriver driver; 
+        private readonly IWebDriver driver;
+
+        // definimos el contructor
+        public HomePageObject(IWebDriver driver)
+        {
+            this.driver = driver;
+        }
+
         private List<IWebElement> DisplayedFruits => driver.FindElements(By.ClassName("fruit")).Where(fruit => fruit.Displayed).ToList();
 
         //Mostramos la lista de frutas
