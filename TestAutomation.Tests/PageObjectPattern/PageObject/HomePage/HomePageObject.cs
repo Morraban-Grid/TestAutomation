@@ -35,6 +35,8 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
         // Método que muestre la lista de frutas
         public IList<FruitModel> DisplayedFruitModel() => FruitHelper.Parse(DisplayedFruitWebElements());
 
+        public PageBarWebElement PageNavegation => new PageBarWebElement(driver);
+
     }
 
 }

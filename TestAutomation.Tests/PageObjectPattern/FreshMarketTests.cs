@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using FluentAssertions;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections;
@@ -64,7 +65,7 @@ namespace TestAutomation.Tests.PageObjectPattern
                 new FruitModel("Avocado", 2.80m, "Creamy and nutritious avocados for salads and guacamole."),
                 new FruitModel("Mango", 2.70m, "Exotic and sweet mangoes for a tropical delight."),
                 new FruitModel("Raspberry", 3.50m, "Delicate and flavorful raspberries for desserts and snacking."),
-                new FruitModel("Pomegranate", 4.00m, "Juicy and antioxidant-rich pomegranates for health - conscious individuals."),
+                new FruitModel("Pomegranate", 4.00m, "Juicy and antioxidant-rich pomegranates for health-conscious individuals."),
                 new FruitModel("Blackberry", 2.80m, "Sweet and juicy blackberries for desserts and smoothies."),
                 new FruitModel("Cranberry", 3.20m, "Tart and antioxidant-packed cranberries for holiday dishes."),
             };
@@ -75,9 +76,20 @@ namespace TestAutomation.Tests.PageObjectPattern
             var displayedOfDisplayedFruits = displayedFruits.Count();// Pasinamos dicho número a una variable para poder comparar con el número de frutas que tenemos en la lista de frutas esperadas
             */
 
+            /*
             var result = new List<FruitModel>();
             var homePage = new HomePageObject(driver); // Se obtiene la página donde están las frutas
             result.AddRange(homePage.DisplayedFruitModel()); // Con esto se obtienen 1as frutas de la page y se inserta
+            */
+
+            var result = new List<FruitModel>();
+            var homePage = new HomePageObject(driver); // se obtiene la página donde estan las frutas.
+            result.AddRange(homePage.DisplayedFruitModel()); //con esto se obtienen 12 frutas de la page y se inserta
+            //para los otros rangos de frutas
+            result.AddRange(homePage.PageNavegation.ClickButtonPage2().DisplayedFruitModel());
+            result.AddRange(homePage.PageNavegation.ClickButtonPage3().DisplayedFruitModel());
+            //para comprar los valores cargados de la pagina contra lo que tenemos:
+            result.Should().BeEquivalentTo(expectedFruits);
         }
     }
 
