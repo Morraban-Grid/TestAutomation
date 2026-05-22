@@ -37,6 +37,21 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
 
         public PageBarWebElement PageNavegation => new PageBarWebElement(driver);
 
+        // Método que devulve la lista de frutas
+        public IList<FruitModel> DisplayedFruitModels() => FruitHelper.Parse(DisplayedFruitWebElements());
+        // Métodos para el segundo test
+        public SearchBarWebElement SearchBar => new SearchBarWebElement(driver);
+
+        // Método para el carrito de compras: Test 3
+        private IWebElement ShoppingCartIcon => driver.FindElement(By.Id("carticon"));
+        public int GetShoppingCartIconNumberOfItems() => int.Parse(ShoppingCartIcon.Text);
+        // Para abrir el carrito de compras
+        public void ClickShoppingCartIcon()
+        {
+            ShoppingCartIcon.Click();
+        }
+
+
     }
 
 }

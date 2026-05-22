@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using TestAutomation.Tests.PageObjectPattern.Models;
 using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
@@ -99,8 +100,52 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void SearchTests()
         {
+            var homePage = new HomePageObject(driver); // Instanciamos un obejto que nos retorna la página
+            var foundFruits = homePage.SearchBar.InputSearch("app").ClickSearch().DisplayedFruitModels();
+            foundFruits.Count.Should().Be(2); // Según la condición debe retornar 2
 
+            // Para obtener los nombres de las frutas encontradas,
+            // se hace un select sobre la lista de frutas encontradas
+            // y se obtiene el nombre de cada fruta, luego se convierte
+            // a una lista para poder comparar con la lista de nombres esperados.
+            var foundFruitsName = foundFruits.Select(fruit => fruit.Name).ToList();
+            var expectFruitNames = new[] { "Pineapple", "Apple" };
+            foundFruitsName.Should().BeEquivalentTo(expectFruitNames);
+            // Compara los valores
+
+            // Para el test 2 , se limpia el search, se pulsa el botón de search
+            // y se verifica que se muestran 12 frutas y vegetales
+            homePage.SearchBar.InputSearch(string.Empty).ClickSearch().DisplayedFruitWebElements().Count.Should().Be(12);
+
+
+
+            // Para el test 3, se busca 'ape' pulsando la tecla 'Enter',
+            // y se verifica que 2 frutas son mostradas Grape y GrapeFruit
+            foundFruits = homePage.SearchBar.InputSearch("ape").ClickEnter().DisplayedFruitModels();
+            expectFruitNames = new[] { "Grape", "Grapefruit" };
+            foundFruits.Select(fruit => fruit.Name).Should().BeEquivalentTo(expectFruitNames);
         }
+
+        //Resumen
+        //Shoping Car Testing:
+        //1. Verificar que el Shoping car icon de la parte superior derecha tiene numero 0
+        //2. Añadir 10 apples, 6 bananas, 5 Avocado y 1 Pomegranate al
+        // Shoping Car(para encontrar las frutas use la navegación por pagina).
+        // Verificar que el Shoping car icon de la parte superior derecha tiene un numero 4
+        //3. Abra el Shoping car y verifique que el item 4 del paso anterior ha sido adicionado
+        // y que su valor es correcto.Verifique que la cantidad total es correcta.
+        //4. Remueva el Pomegrante. Verifique que la cantidad es 3 en el icon del Shoping Car.
+        //5. Actualizar la cantidad de bananas a 3. Verificar que el costo total el correcto.
+        //6. Cerrar el carro de compra
+        [Test]
+        public void ShoppingCartTest()
+        {
+            //tarea 1. verificar que el icon de arriba es 0
+            var homePage = new HomePageObject(driver);
+            homePage.GetShoppingCartIconNumberOfItems().Should().Be(0);
+        }
+
+
     }
 
 }
