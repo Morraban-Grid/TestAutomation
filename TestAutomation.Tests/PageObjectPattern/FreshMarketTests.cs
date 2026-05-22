@@ -97,7 +97,7 @@ namespace TestAutomation.Tests.PageObjectPattern
         // 2. Limpiar el search, pulsar el botón search, y verificar que 12 frutas y vegetales se muestran
         // 3. Buscar 'ape' pulsando la tecla 'Enter', y verificar que 2 frutas son mostradas Grape y GrapeFruit
         [Test]
-        public void SearchTest()
+        public void SearchTests()
         {
 
         }
