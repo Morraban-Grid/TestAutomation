@@ -11,7 +11,7 @@ namespace TestAutomation.Tests.Inicio
     [TestFixture]
     public class TestBasico
     {
-        #pragma warning disable NUnit1032
+#pragma warning disable NUnit1032
         private ChromeDriver driver;
 
         [SetUp]
@@ -158,6 +158,11 @@ namespace TestAutomation.Tests.Inicio
                 throw new TimeoutException("Error executing the condition", ex);
 
             throw new TimeoutException("Condition was false");
+        }
+
+        public void WaitForCondition(Action action, int msTimeout = 4000)
+        {
+            
         }
     }
 }
