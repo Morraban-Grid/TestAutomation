@@ -91,6 +91,16 @@ namespace TestAutomation.Tests.PageObjectPattern
             //para comprar los valores cargados de la pagina contra lo que tenemos:
             result.Should().BeEquivalentTo(expectedFruits);
         }
+
+        // Nos implementa e siguiente test
+        // 1. Buscar 'app' pulsar search, button y verifique que solo Apple y Pineapple se muestran en la página.
+        // 2. Limpiar el search, pulsar el botón search, y verificar que 12 frutas y vegetales se muestran
+        // 3. Buscar 'ape' pulsando la tecla 'Enter', y verificar que 2 frutas son mostradas Grape y GrapeFruit
+        [Test]
+        public void SearchTest()
+        {
+
+        }
     }
 
 }
