@@ -143,7 +143,7 @@ namespace TestAutomation.Tests.PageObjectPattern
         {
             // Tarea 1. verificar que el icon de arriba es 0
             var homePage = new HomePageObject(driver);
-            homePage.GetShoppingCartIconNumberOfItems().Should().Be(0);
+            homePage.IsShoppingCartIconNumberOfItems(0).Should().BeTrue();
 
             // Tarea 2: agregar 10 apple, 6 bananas, 5 Avocados
             // y 1 Pomegranete.. vericar el icon de shopping = 4
@@ -166,7 +166,7 @@ namespace TestAutomation.Tests.PageObjectPattern
             element.InputQuantity(1).ClickAddToCar();
             // Para verificar que el carro tiene numero 4, se obtiene el número del icono del carro de compras
             // y se compara con el valor esperado.
-            homePage.GetShoppingCartIconNumberOfItems().Should().Be(4);
+            homePage.IsShoppingCartIconNumberOfItems(4).Should().Be(true);
 
         }
     }

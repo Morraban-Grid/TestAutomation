@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestAutomation.Tests.PageObjectPattern.Helpers;
 using TestAutomation.Tests.PageObjectPattern.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
 {
@@ -44,7 +45,19 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
 
         // Método para el carrito de compras: Test 3
         private IWebElement ShoppingCartIcon => driver.FindElement(By.Id("carticon"));
-        public int GetShoppingCartIconNumberOfItems() => int.Parse(ShoppingCartIcon.Text);
+        public bool IsShoppingCartIconNumberOfItems(int number)
+        {
+            try
+            {
+                WaitHelper.WaitForCondition(() =>
+                int.Parse(ShoppingCartIcon.Text).Equals(number));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         // Para abrir el carrito de compras
         public void ClickShoppingCartIcon()
         {
