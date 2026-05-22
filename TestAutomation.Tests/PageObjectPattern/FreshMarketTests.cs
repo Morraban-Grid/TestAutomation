@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
+using System.Xml.Linq;
 using TestAutomation.Tests.PageObjectPattern.Models;
 using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -146,13 +147,27 @@ namespace TestAutomation.Tests.PageObjectPattern
 
             // Tarea 2: agregar 10 apple, 6 bananas, 5 Avocados
             // y 1 Pomegranete.. vericar el icon de shopping = 4
-            var appleElement = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Apple"));
+            var element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Apple"));
 
-            appleElement.InputQuantity(10).ClickAddToCar();
+            element.InputQuantity(10).ClickAddToCar(); // Añadimos 10 apple y pulsamos click para anadir al carro.
+            //Bananas 6
+            element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Banana"));
+            element.InputQuantity(6).ClickAddToCar(); // Añadimos 6 bananas y pulsamos click para anadir al carro.
+            //Avocado 5. Primero, hacemos click para avanzar la página
+            //y luego buscamos el elemento para añadirlo al carro.
+            homePage.PageNavegation.ClickButtonPage2(); // Ahora, estamos en la página 2,
+                                                        // por lo que buscamos el elemento de avocado en esta página.
+            element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Avocado"));
+            element.InputQuantity(5).ClickAddToCar();
+            //Pomegranate
+            homePage.PageNavegation.ClickButtonPage3(); // Ahora, estamos en la página 3, por lo que
+                                                        // buscamos el elemento de Pomegranate en esta página.
+            element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Pomegranate"));
+            element.InputQuantity(1).ClickAddToCar();
+            // Para verificar que el carro tiene numero 4, se obtiene el número del icono del carro de compras
+            // y se compara con el valor esperado.
+            homePage.GetShoppingCartIconNumberOfItems().Should().Be(4);
 
         }
-
-
     }
-
 }
