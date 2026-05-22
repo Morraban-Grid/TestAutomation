@@ -140,9 +140,16 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void ShoppingCartTest()
         {
-            //tarea 1. verificar que el icon de arriba es 0
+            // Tarea 1. verificar que el icon de arriba es 0
             var homePage = new HomePageObject(driver);
             homePage.GetShoppingCartIconNumberOfItems().Should().Be(0);
+
+            // Tarea 2: agregar 10 apple, 6 bananas, 5 Avocados
+            // y 1 Pomegranete.. vericar el icon de shopping = 4
+            var appleElement = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Apple"));
+
+            appleElement.InputQuantity(10).ClickAddToCar();
+
         }
 
 
