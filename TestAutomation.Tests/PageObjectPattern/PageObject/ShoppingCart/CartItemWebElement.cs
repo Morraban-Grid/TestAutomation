@@ -17,6 +17,11 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.ShoppingCart
         {
             InputFieldQuantity.Clear();
             InputFieldQuantity.SendKeys(quantity.ToString());
+            InputFieldQuantity.SendKeys(Keys.Tab);
         }
+
+        public int GetQuantity() => int.Parse(InputFieldQuantity.GetAttribute("value"));
+
+
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Xml.Linq;
+using TestAutomation.Tests.PageObjectPattern.Helpers;
 using TestAutomation.Tests.PageObjectPattern.Models;
 using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -141,32 +142,36 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void ShoppingCartTest()
         {
-            // Tarea 1. verificar que el icon de arriba es 0
+            // Tarea 1. Verificar que el icon de arriba es 0
             var homePage = new HomePageObject(driver);
             homePage.IsShoppingCartIconNumberOfItems(0).Should().BeTrue();
-
-            // Tarea 2: agregar 10 apple, 6 bananas, 5 Avocados
-            // y 1 Pomegranete.. vericar el icon de shopping = 4
+            var expectedFruitsInCart = new List<FruitModel>();
+            // Tarea 2: agregar 10apple, 6 bananas, 5 Avocado 1 Pomegranete. Verificar el icon de shopping = 4
             var element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Apple"));
-
-            element.InputQuantity(10).ClickAddToCar(); // Añadimos 10 apple y pulsamos click para anadir al carro.
+            element.InputQuantity(10).ClickAddToCar(); // agregar 10 apple y hacer click para anadir al carro.
+            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
             //Bananas 6
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Banana"));
-            element.InputQuantity(6).ClickAddToCar(); // Añadimos 6 bananas y pulsamos click para anadir al carro.
-            //Avocado 5. Primero, hacemos click para avanzar la página
-            //y luego buscamos el elemento para añadirlo al carro.
-            homePage.PageNavegation.ClickButtonPage2(); // Ahora, estamos en la página 2,
-                                                        // por lo que buscamos el elemento de avocado en esta página.
+            element.InputQuantity(6).ClickAddToCar(); // add las 6 bananas pulsa click para anadir al carro.
+            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
+            //Avocado 5. primero click para avanzar pagina
+            homePage.PageNavegation.ClickButtonPage2(); // Estamos en pagina 2
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Avocado"));
             element.InputQuantity(5).ClickAddToCar();
+            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
             //Pomegranate
-            homePage.PageNavegation.ClickButtonPage3(); // Ahora, estamos en la página 3, por lo que
-                                                        // buscamos el elemento de Pomegranate en esta página.
+            homePage.PageNavegation.ClickButtonPage3(); // Estamos en pagina 3
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Pomegranate"));
             element.InputQuantity(1).ClickAddToCar();
-            // Para verificar que el carro tiene numero 4, se obtiene el número del icono del carro de compras
-            // y se compara con el valor esperado.
-            homePage.IsShoppingCartIconNumberOfItems(4).Should().Be(true);
+            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
+            // Para verificar que el carro tiene numero 4
+            homePage.IsShoppingCartIconNumberOfItems(4).Should().BeTrue();
+            //Test 3: Abrir el carro, verificar que tiene 4 elementos y sus valores son correctos
+            var cart = homePage.ClickShoppingCartIcon(); //abre el carrito
+
+
+
+
 
         }
     }

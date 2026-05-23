@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestAutomation.Tests.PageObjectPattern.Helpers;
 using TestAutomation.Tests.PageObjectPattern.Models;
+using TestAutomation.Tests.PageObjectPattern.PageObject.ShoppingCart;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
@@ -59,9 +60,10 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
             }
         }
         // Para abrir el carrito de compras
-        public void ClickShoppingCartIcon()
+        public ShoppingCartPageObject ClickShoppingCartIcon()
         {
             ShoppingCartIcon.Click();
+            return new ShoppingCartPageObject(driver);
         }
 
 
