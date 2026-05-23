@@ -165,14 +165,43 @@ namespace TestAutomation.Tests.PageObjectPattern
             element.InputQuantity(1).ClickAddToCar();
             expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
             // Para verificar que el carro tiene numero 4
-            homePage.IsShoppingCartIconNumberOfItems(4).Should().BeTrue();
+            homePage.IsShoppingCartIconNumberOfItems(3).Should().BeTrue();
             //Test 3: Abrir el carro, verificar que tiene 4 elementos y sus valores son correctos
             var cart = homePage.ClickShoppingCartIcon(); //abre el carrito
 
+            cart.CartItemWebElements.Count().Should().Be(4);// Comprueba 4 elementos en el carro
+
+            var item = () => cart.CartItemWebElements;
 
 
+            for (var i = 0; i < 4; i++)
+            {
+                var fruit = expectedFruitsInCart[i];
+                item.ElementAt(i).GetText().Should().Be($"{fruit.Name} {fruit.Price}€/ Kg");
+                fruit.Quantity.Should().Be(item.ElementAt(i).GetQuantity());
+            }
+            // Para probar que los totales son iguales
 
+            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems());
+            // Borrar la granada
+            item().ElementAt(3).ClickButtonRemove();// Borra
+            homePage.IsShoppingCartIconNumberOfItems(3); // El número del icon de carro es 3
+            item().ElementAt(1).InputQuantity(3); // Se actualiza bananas a 3
 
+            var totalPrice = cart.GetTotalPrice();
+            var TotalPriceFromItems = cart.GetTotalPriceFromItems();
+            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems());
+
+            cart.ClickButtonClose(); // Clic sobre booton Close.
+        }
+
+        private FruitModel AddItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
+        {
+            var fruitWebElement = displayedFruits.Single(fruit => fruit.Name.Equals(fruitName));
+            fruitWebElement.InputQuantity(quantity).ClickAddToCar();
+            var fruitModel = FruitHelper.Parse(fruitWebElement);
+            fruitModel.Quantity = quantity;
+            return fruitModel;
         }
     }
 }

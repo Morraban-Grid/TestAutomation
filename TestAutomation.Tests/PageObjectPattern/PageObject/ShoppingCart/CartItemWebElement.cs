@@ -21,7 +21,8 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.ShoppingCart
         }
 
         public int GetQuantity() => int.Parse(InputFieldQuantity.GetAttribute("value"));
-
+        public decimal GetTotalPrice() => GetQuantity() * GetPrice();
+        public decimal GetPrice() => decimal.Parse(InfoText.Text.Split(" ")[1]);
 
     }
 }

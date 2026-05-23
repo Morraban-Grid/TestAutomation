@@ -19,6 +19,7 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.ShoppingCart
         public decimal GetTotalPrice() => decimal.Parse(TotalPrice.Text);
         private List<IWebElement> CartItems => driver.FindElements(By.ClassName("cartitem")).ToList();
 
-        private IEnumerable<CartItemWebElement> CartItemWebElements => CartItems.Select(item => new CartItemWebElement(item));
+        public IEnumerable<CartItemWebElement> CartItemWebElements => CartItems.Select(item => new CartItemWebElement(item));
+        public decimal GetTotalPriceFromItems() => CartItemWebElements.Sum(item => item.GetTotalPrice());
     }
 }
