@@ -17,14 +17,6 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
         public string Price => fruitWebElement.FindElement(By.TagName("p")).Text;
         //Establecemos la descripción, que es el segundo párrafo, por eso el [1]
         public string Description => fruitWebElement.FindElements(By.TagName("p"))[1].Text;
-        // Definimos el constructor cuando se crea la variable fruitElement, así tendrá un valor
-
-        /*
-        public FruitWebElement(IWebElement fruitWebElement)
-        {
-            this.fruitWebElement = fruitWebElement;
-        }
-        */
 
         // Selectores para el Test3: Quantity y Add to car.
         private IWebElement InputFieldQuantity =>

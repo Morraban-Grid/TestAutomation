@@ -18,7 +18,7 @@ namespace TestAutomation.Tests.Frame
             driver = new ChromeDriver();
             driver.Manage().Window.Maximize();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
-            driver.Url = "http://curso.testautomation.es";
+            driver.Url = "https://curso.testautomation.es";
         }
 
         [TearDown]

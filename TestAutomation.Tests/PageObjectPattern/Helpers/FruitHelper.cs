@@ -9,7 +9,7 @@ using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
 
 namespace TestAutomation.Tests.PageObjectPattern.Helpers
 {
-    public class FruitHelper
+    public static class FruitHelper
     {
 
         public static IList<FruitWebElement> Parse(IList<IWebElement> fruits)

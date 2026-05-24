@@ -21,7 +21,7 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
         // por lo que los definimos como propiedades privadas
         private IWebElement InputSearchProduct =>
         driver.FindElement(By.Id("product-search"));
-        private IWebElement ButtonSearch => driver.FindElement(By.Id("searchbutton"));
+        private IWebElement ButtonSearch => driver.FindElement(By.Id("search-button"));
         // acciones del input y boton search
         public SearchBarWebElement InputSearch(string termToSearch)
         {

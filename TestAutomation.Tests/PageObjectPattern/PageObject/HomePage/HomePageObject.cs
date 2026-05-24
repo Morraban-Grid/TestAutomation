@@ -45,7 +45,7 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
         public SearchBarWebElement SearchBar => new SearchBarWebElement(driver);
 
         // Método para el carrito de compras: Test 3
-        private IWebElement ShoppingCartIcon => driver.FindElement(By.Id("carticon"));
+        private IWebElement ShoppingCartIcon => driver.FindElement(By.Id("cart-icon"));
         public bool IsShoppingCartIconNumberOfItems(int number)
         {
             try

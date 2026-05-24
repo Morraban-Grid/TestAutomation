@@ -2,21 +2,18 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Xml.Linq;
+using System.Linq;
 using TestAutomation.Tests.PageObjectPattern.Helpers;
 using TestAutomation.Tests.PageObjectPattern.Models;
 using TestAutomation.Tests.PageObjectPattern.PageObject.HomePage;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using NUnit.Framework;
 
 namespace TestAutomation.Tests.PageObjectPattern
 {
     public class FreshMarketTests
     {
-        #pragma warning disable NUnit1032
+#pragma warning disable NUnit1032
         IWebDriver driver;
 
         [SetUp]
@@ -73,126 +70,97 @@ namespace TestAutomation.Tests.PageObjectPattern
                 new FruitModel("Cranberry", 3.20m, "Tart and antioxidant-packed cranberries for holiday dishes."),
             };
 
-            /*
-            var homePage = new HomePageObject(driver); // Obtenemos la página donde están las frutas
-            var displayedFruits = homePage.DisplayedFruitWebElements(); // Obtenemos 12 frutas de la página
-            var displayedOfDisplayedFruits = displayedFruits.Count();// Pasinamos dicho número a una variable para poder comparar con el número de frutas que tenemos en la lista de frutas esperadas
-            */
-
-            /*
             var result = new List<FruitModel>();
-            var homePage = new HomePageObject(driver); // Se obtiene la página donde están las frutas
-            result.AddRange(homePage.DisplayedFruitModel()); // Con esto se obtienen 1as frutas de la page y se inserta
-            */
-
-            var result = new List<FruitModel>();
-            var homePage = new HomePageObject(driver); // se obtiene la página donde estan las frutas.
-            result.AddRange(homePage.DisplayedFruitModel()); //con esto se obtienen 12 frutas de la page y se inserta
-            //para los otros rangos de frutas
+            var homePage = new HomePageObject(driver);
+            result.AddRange(homePage.DisplayedFruitModel());
             result.AddRange(homePage.PageNavegation.ClickButtonPage2().DisplayedFruitModel());
             result.AddRange(homePage.PageNavegation.ClickButtonPage3().DisplayedFruitModel());
-            //para comprar los valores cargados de la pagina contra lo que tenemos:
             result.Should().BeEquivalentTo(expectedFruits);
         }
 
-        // Nos implementa e siguiente test
-        // 1. Buscar 'app' pulsar search, button y verifique que solo Apple y Pineapple se muestran en la página.
-        // 2. Limpiar el search, pulsar el botón search, y verificar que 12 frutas y vegetales se muestran
-        // 3. Buscar 'ape' pulsando la tecla 'Enter', y verificar que 2 frutas son mostradas Grape y GrapeFruit
         [Test]
         public void SearchTests()
         {
-            var homePage = new HomePageObject(driver); // Instanciamos un obejto que nos retorna la página
+            var homePage = new HomePageObject(driver);
             var foundFruits = homePage.SearchBar.InputSearch("app").ClickSearch().DisplayedFruitModels();
-            foundFruits.Count.Should().Be(2); // Según la condición debe retornar 2
+            foundFruits.Count.Should().Be(2);
 
-            // Para obtener los nombres de las frutas encontradas,
-            // se hace un select sobre la lista de frutas encontradas
-            // y se obtiene el nombre de cada fruta, luego se convierte
-            // a una lista para poder comparar con la lista de nombres esperados.
             var foundFruitsName = foundFruits.Select(fruit => fruit.Name).ToList();
             var expectFruitNames = new[] { "Pineapple", "Apple" };
             foundFruitsName.Should().BeEquivalentTo(expectFruitNames);
-            // Compara los valores
 
-            // Para el test 2 , se limpia el search, se pulsa el botón de search
-            // y se verifica que se muestran 12 frutas y vegetales
             homePage.SearchBar.InputSearch(string.Empty).ClickSearch().DisplayedFruitWebElements().Count.Should().Be(12);
 
-
-
-            // Para el test 3, se busca 'ape' pulsando la tecla 'Enter',
-            // y se verifica que 2 frutas son mostradas Grape y GrapeFruit
             foundFruits = homePage.SearchBar.InputSearch("ape").ClickEnter().DisplayedFruitModels();
             expectFruitNames = new[] { "Grape", "Grapefruit" };
             foundFruits.Select(fruit => fruit.Name).Should().BeEquivalentTo(expectFruitNames);
         }
 
-        //Resumen
-        //Shoping Car Testing:
-        //1. Verificar que el Shoping car icon de la parte superior derecha tiene numero 0
-        //2. Añadir 10 apples, 6 bananas, 5 Avocado y 1 Pomegranate al
-        // Shoping Car(para encontrar las frutas use la navegación por pagina).
-        // Verificar que el Shoping car icon de la parte superior derecha tiene un numero 4
-        //3. Abra el Shoping car y verifique que el item 4 del paso anterior ha sido adicionado
-        // y que su valor es correcto.Verifique que la cantidad total es correcta.
-        //4. Remueva el Pomegrante. Verifique que la cantidad es 3 en el icon del Shoping Car.
-        //5. Actualizar la cantidad de bananas a 3. Verificar que el costo total el correcto.
-        //6. Cerrar el carro de compra
         [Test]
         public void ShoppingCartTest()
         {
-            // Tarea 1. Verificar que el icon de arriba es 0
+            // Tarea 1: verificar que el icono del carrito muestra 0
             var homePage = new HomePageObject(driver);
             homePage.IsShoppingCartIconNumberOfItems(0).Should().BeTrue();
+
             var expectedFruitsInCart = new List<FruitModel>();
-            // Tarea 2: agregar 10apple, 6 bananas, 5 Avocado 1 Pomegranete. Verificar el icon de shopping = 4
+
+            // Tarea 2: agregar frutas al carrito y verificar icono = 4
             var element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Apple"));
-            element.InputQuantity(10).ClickAddToCar(); // agregar 10 apple y hacer click para anadir al carro.
-            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
-            //Bananas 6
+            element.InputQuantity(10).ClickAddToCar();
+            var appleModel = FruitHelper.Parse(element);
+            appleModel.Quantity = 10;                          // ← asignar cantidad
+            expectedFruitsInCart.Add(appleModel);
+
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Banana"));
-            element.InputQuantity(6).ClickAddToCar(); // add las 6 bananas pulsa click para anadir al carro.
-            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
-            //Avocado 5. primero click para avanzar pagina
-            homePage.PageNavegation.ClickButtonPage2(); // Estamos en pagina 2
+            element.InputQuantity(6).ClickAddToCar();
+            var bananaModel = FruitHelper.Parse(element);
+            bananaModel.Quantity = 6;                          // ← asignar cantidad
+            expectedFruitsInCart.Add(bananaModel);
+
+            homePage.PageNavegation.ClickButtonPage2();
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Avocado"));
             element.InputQuantity(5).ClickAddToCar();
-            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
-            //Pomegranate
-            homePage.PageNavegation.ClickButtonPage3(); // Estamos en pagina 3
+            var avocadoModel = FruitHelper.Parse(element);
+            avocadoModel.Quantity = 5;                         // ← asignar cantidad
+            expectedFruitsInCart.Add(avocadoModel);
+
+            homePage.PageNavegation.ClickButtonPage3();
             element = homePage.DisplayedFruitWebElements().Single(fruit => fruit.Name.Equals("Pomegranate"));
             element.InputQuantity(1).ClickAddToCar();
-            expectedFruitsInCart.Add(FruitHelper.Parse(element)); // Se adiciona a la lista.
-            // Para verificar que el carro tiene numero 4
-            homePage.IsShoppingCartIconNumberOfItems(3).Should().BeTrue();
-            //Test 3: Abrir el carro, verificar que tiene 4 elementos y sus valores son correctos
-            var cart = homePage.ClickShoppingCartIcon(); //abre el carrito
+            var pomegranateModel = FruitHelper.Parse(element);
+            pomegranateModel.Quantity = 1;                     // ← asignar cantidad
+            expectedFruitsInCart.Add(pomegranateModel);
 
-            cart.CartItemWebElements.Count().Should().Be(4);// Comprueba 4 elementos en el carro
+            // Verificar icono = 4
+            homePage.IsShoppingCartIconNumberOfItems(4).Should().BeTrue();
+
+            // Tarea 3: abrir carrito y verificar 4 elementos con valores correctos
+            var cart = homePage.ClickShoppingCartIcon();
+            cart.CartItemWebElements.Count().Should().Be(4);
 
             var item = () => cart.CartItemWebElements;
-
 
             for (var i = 0; i < 4; i++)
             {
                 var fruit = expectedFruitsInCart[i];
-                item.ElementAt(i).GetText().Should().Be($"{fruit.Name} {fruit.Price}€/ Kg");
-                fruit.Quantity.Should().Be(item.ElementAt(i).GetQuantity());
+                item().ElementAt(i).GetText().Should().Be($"{fruit.Name} {fruit.Price} €/Kg");
+                fruit.Quantity.Should().Be(item().ElementAt(i).GetQuantity());
             }
-            // Para probar que los totales son iguales
 
-            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems());
-            // Borrar la granada
-            item().ElementAt(3).ClickButtonRemove();// Borra
-            homePage.IsShoppingCartIconNumberOfItems(3); // El número del icon de carro es 3
-            item().ElementAt(1).InputQuantity(3); // Se actualiza bananas a 3
-
-            var totalPrice = cart.GetTotalPrice();
-            var TotalPriceFromItems = cart.GetTotalPriceFromItems();
+            // Verificar que el total del carrito es correcto
             cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems());
 
-            cart.ClickButtonClose(); // Clic sobre booton Close.
+            // Tarea 4: eliminar Pomegranate y verificar icono = 3
+            item().ElementAt(3).ClickButtonRemove();
+            homePage.IsShoppingCartIconNumberOfItems(3).Should().BeTrue();  // ← aserción completa
+
+            // Tarea 5: actualizar cantidad de bananas a 3 y verificar total
+            item().ElementAt(1).InputQuantity(3);
+            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems());
+
+            // Tarea 6: cerrar el carrito
+            cart.ClickButtonClose();
         }
 
         private FruitModel AddItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
