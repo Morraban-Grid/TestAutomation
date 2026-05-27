@@ -34,5 +34,31 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.ContactUs
         public string? GetDisplayedEmailErrorMessage() => EmailErrorMessage.Displayed ? EmailErrorMessage.Text : null;
         public string? GetDisplayedTextErrorMessage() => TextErrorMessage.Displayed ? TextErrorMessage.Text : null;
         public IEnumerable<string> GetCategoryOptions() => DropdownCategory.Options.Select(category => category.Text);
+
+        // Métodos para interactuar con los campos del formulario
+        public ContactUsPageObject InputTextContactTitle(string title)
+        {
+            InputFieldContactTitle.Clear();
+            InputFieldContactTitle.SendKeys(title);
+            return this;
+        }
+        public ContactUsPageObject InputTextContactEmail(string email)
+        {
+            InputFieldContactEmail.Clear();
+            InputFieldContactEmail.SendKeys(email);
+            return this;
+        }
+        public ContactUsPageObject InputTextContactMessage(string message)
+        {
+            InputFieldContactText.Clear();
+            InputFieldContactText.SendKeys(message);
+            return this;
+        }
+        public ContactUsPageObject SelectCategory(string category)
+        {
+            DropdownCategory.SelectByText(category);
+            return this;
+        }
+
     }
 }
