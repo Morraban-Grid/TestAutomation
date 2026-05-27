@@ -11,9 +11,10 @@ using NUnit.Framework;
 
 namespace TestAutomation.Tests.PageObjectPattern
 {
+    [Parallelizable(ParallelScope.All)]
     public class FreshMarketTests
     {
-#pragma warning disable NUnit1032
+        #pragma warning disable NUnit1032
         IWebDriver driver;
 
         [SetUp]
