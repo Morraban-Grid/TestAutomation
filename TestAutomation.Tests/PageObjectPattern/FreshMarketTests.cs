@@ -189,6 +189,9 @@ namespace TestAutomation.Tests.PageObjectPattern
             var homePage = new HomePageObject(driver);
             var contactUsForm = homePage.clickContactUs();
             contactUsForm.ClickSumit();
+            contactUsForm.GetDisplayedTitleErrorMessage().Should().Be("Please enter a title");
+            contactUsForm.GetDisplayedEmailErrorMessage().Should().Be("Please enter a valid email address");
+            contactUsForm.GetDisplayedTextErrorMessage().Should().Be("Please enter a message");
         }
         private FruitModel addItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
         {
