@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestAutomation.Tests.PageObjectPattern.Helpers;
 using TestAutomation.Tests.PageObjectPattern.Models;
+using TestAutomation.Tests.PageObjectPattern.PageObject.ContactUs;
 using TestAutomation.Tests.PageObjectPattern.PageObject.ShoppingCart;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -74,6 +75,12 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
 
         // Para el 4 test: verificar que el carrito se vacia al hacer click en el icono del carrito
         private IWebElement ButtonContactUs => driver.FindElement(By.Id("openContactPopup"));
+
+        public ContactUsPageObject clickContactUs()
+        {
+            ButtonContactUs.Click();
+            return new ContactUsPageObject(driver);
+        }
 
     }
 
