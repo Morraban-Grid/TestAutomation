@@ -33,5 +33,6 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.ContactUs
         public string? GetDisplayedTitleErrorMessage() => TitleErrorMessage.Displayed ? TitleErrorMessage.Text : null;
         public string? GetDisplayedEmailErrorMessage() => EmailErrorMessage.Displayed ? EmailErrorMessage.Text : null;
         public string? GetDisplayedTextErrorMessage() => TextErrorMessage.Displayed ? TextErrorMessage.Text : null;
+        public IEnumerable<string> GetCategoryOptions() => DropdownCategory.Options.Select(category => category.Text);
     }
 }
