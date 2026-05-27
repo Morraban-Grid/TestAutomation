@@ -161,6 +161,10 @@ namespace TestAutomation.Tests.PageObjectPattern
 
             // Tarea 6: cerrar el carrito
             cart.ClickButtonClose();
+
+            var totalPriceFromItems = cart.GetTotalPriceFromItems();
+            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems()); // Se verifica que el total del carrito es correcto antes de cerrar el carrito.
+            cart.ClickButtonClose(); // Clicamos el botón de cerrar el carrito.
         }
 
         private FruitModel AddItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
@@ -171,5 +175,31 @@ namespace TestAutomation.Tests.PageObjectPattern
             fruitModel.Quantity = quantity;
             return fruitModel;
         }
+
+        // resumen de 4to test
+        //1.Abrir el Fresh Market.
+        //2.Click en el botón “Contact Us”
+        //3.Click en el botón “Submit”. Verificar que 3 mensajes de error son mostrados con sus valores
+        //4.Verifique que el desplegable “Categoria” contiene 5 opciones, que se pueden ver en la IU.
+        //5.Ingrese valores validos en todos los campos y pulse “Submit”. Verifique que una aleta se muestra con el mensaje “Form submitted successfully”
+        //6.Click al boton “Accept” dentro del alerta.
+        [Test]
+        public void ContactUsTest()
+        {
+            var homePage = new HomePageObject(driver);
+            var contactUsForm = homePage.clickContactUs();
+            contactUsForm.ClickSumit();
+        }
+        private FruitModel addItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
+        {
+            var fruitWebElement = displayedFruits.Single(fruit => fruit.Name.Equals(fruitName));
+            fruitWebElement
+            .InputQuantity(quantity)
+            .ClickAddToCar();
+            var fruitModel = FruitHelper.Parse(fruitWebElement);
+            fruitModel.Quantity = quantity;
+            return fruitModel;
+        }
+
     }
 }
