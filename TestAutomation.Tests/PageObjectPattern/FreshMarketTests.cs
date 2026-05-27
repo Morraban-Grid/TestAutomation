@@ -192,6 +192,7 @@ namespace TestAutomation.Tests.PageObjectPattern
             contactUsForm.GetDisplayedTitleErrorMessage().Should().Be("Please enter a title");
             contactUsForm.GetDisplayedEmailErrorMessage().Should().Be("Please enter a valid email address");
             contactUsForm.GetDisplayedTextErrorMessage().Should().Be("Please enter a message");
+            contactUsForm.GetCategoryOptions().Should().BeEquivalentTo(new[] { "Search Information", "Career query", "Fruit enquiry", "Improvements", "Other" });
         }
         private FruitModel addItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
         {
