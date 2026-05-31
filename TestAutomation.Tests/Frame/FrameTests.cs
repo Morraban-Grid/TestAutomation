@@ -54,8 +54,9 @@ namespace TestAutomation.Tests.Frame
             driver.SwitchTo().Frame(1);
             // Obtenemos el valor del texto
             var webElementRight = driver.FindElement(By.CssSelector("h2")).Text;
-            
-            
+
+            Assert.That(webElementLeft, Is.Not.Empty);
+            Assert.That(webElementRight, Is.Not.Empty);
         }
     }
 }

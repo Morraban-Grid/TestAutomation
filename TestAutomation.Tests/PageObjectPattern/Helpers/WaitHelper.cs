@@ -33,7 +33,7 @@ namespace TestAutomation.Tests.PageObjectPattern.Helpers
             {
                 throw new TimeoutException("Error executing the condition", ex);
             }
-            throw new TimeoutException("Error the condition was false", ex);// Si la condifición es false,
+            throw new TimeoutException("Error the condition was false");// Si la condifición es false,
                                                                             // lanzamos una excepción de timeout.
         }
     }

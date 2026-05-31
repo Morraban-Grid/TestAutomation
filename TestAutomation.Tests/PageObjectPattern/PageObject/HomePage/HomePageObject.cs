@@ -67,12 +67,6 @@ namespace TestAutomation.Tests.PageObjectPattern.PageObject.HomePage
             return new ShoppingCartPageObject(driver);
         }
 
-        public ShoppingCartPageObject ClickShoppingCartIcon()
-        {
-            ShoppingCartIcon.Click();
-            return new ShoppingCartPageObject(driver);
-        }
-
         // Para el 4 test: verificar que el carrito se vacia al hacer click en el icono del carrito
         private IWebElement ButtonContactUs => driver.FindElement(By.Id("openContactPopup"));
 

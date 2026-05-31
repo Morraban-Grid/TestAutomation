@@ -41,7 +41,7 @@ namespace TestAutomation.Tests.Inicio
             }
             finally
             {
-                driver.Dispose();
+                driver?.Dispose();
                 driver = null;
             }
         }
@@ -91,7 +91,7 @@ namespace TestAutomation.Tests.Inicio
 
         // método que devuelve un elemento web cuando es clickeable,
         // o lanza una excepción si no lo es en el tiempo especificado
-        private IWebElement WaitUntilElementClickable(By locator, TimeSpan timeout)
+        private IWebElement? WaitUntilElementClickable(By locator, TimeSpan timeout)
         {
             var wait = new WebDriverWait(driver, timeout);
             return wait.Until(d =>
@@ -103,7 +103,7 @@ namespace TestAutomation.Tests.Inicio
 
         // método que devulve un elemento web cuando es visible,
         // o lanza una excepción si no lo es en el tiempo especificado
-        private IWebElement WaitUntilElementVisible(By locator, TimeSpan timeout)
+        private IWebElement? WaitUntilElementVisible(By locator, TimeSpan timeout)
         {
             var wait = new WebDriverWait(driver, timeout);
             return wait.Until(d =>
@@ -162,7 +162,7 @@ namespace TestAutomation.Tests.Inicio
 
         public void WaitForCondition(Action action, int msTimeout = 4000)
         {
-            
+            WaitForCondition(() => { action(); return true; }, msTimeout);
         }
     }
 }

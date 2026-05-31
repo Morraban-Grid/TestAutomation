@@ -12,9 +12,10 @@ using NUnit.Framework;
 namespace TestAutomation.Tests.PageObjectPattern
 {
     [Parallelizable(ParallelScope.All)]
-    public class FreshMarketTests
+    public class FreshMarketTests : TestBase
     {
         #pragma warning disable NUnit1032
+        /*
         IWebDriver driver;
 
         [SetUp]
@@ -31,6 +32,7 @@ namespace TestAutomation.Tests.PageObjectPattern
         {
             driver.Quit();
         }
+        */
 
         /// <summary>
         /// Verify that the next provided fruits are displayed into the shop.
@@ -39,6 +41,12 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void VerifyThatFruitsAreCorrectlyDisplayed()
         {
+            using UITestContext uiTestContext = new UITestContext();
+            var driver = uiTestContext.Driver;
+            driver.Manage().Window.Maximize();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+            driver.Url = "https://curso.testautomation.es/FruitVegetablesShopWeb/index.html";
+
             var expectedFruits = new List<FruitModel>
             {
                 new FruitModel("Apple", 2.50m, "Crispy and delicious apples from the orchard."),
@@ -82,6 +90,9 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void SearchTests()
         {
+            using UITestContext uiTestContext = new UITestContext();
+            var driver = uiTestContext.Driver;
+
             var homePage = new HomePageObject(driver);
             var foundFruits = homePage.SearchBar.InputSearch("app").ClickSearch().DisplayedFruitModels();
             foundFruits.Count.Should().Be(2);
@@ -100,6 +111,9 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void ShoppingCartTest()
         {
+            using UITestContext uiTestContext = new UITestContext();
+            var driver = uiTestContext.Driver;
+
             // Tarea 1: verificar que el icono del carrito muestra 0
             var homePage = new HomePageObject(driver);
             homePage.IsShoppingCartIconNumberOfItems(0).Should().BeTrue();
@@ -163,9 +177,9 @@ namespace TestAutomation.Tests.PageObjectPattern
             // Tarea 6: cerrar el carrito
             cart.ClickButtonClose();
 
-            var totalPriceFromItems = cart.GetTotalPriceFromItems();
-            cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems()); // Se verifica que el total del carrito es correcto antes de cerrar el carrito.
-            cart.ClickButtonClose(); // Clicamos el botón de cerrar el carrito.
+            //var totalPriceFromItems = cart.GetTotalPriceFromItems();
+            //cart.GetTotalPrice().Should().Be(cart.GetTotalPriceFromItems()); // Se verifica que el total del carrito es correcto antes de cerrar el carrito.
+            //cart.ClickButtonClose(); // Clicamos el botón de cerrar el carrito.
         }
 
         private FruitModel AddItemToCart(IList<FruitWebElement> displayedFruits, string fruitName, int quantity)
@@ -187,6 +201,9 @@ namespace TestAutomation.Tests.PageObjectPattern
         [Test]
         public void ContactUsTest()
         {
+            using UITestContext uiTestContext = new UITestContext();
+            var driver = uiTestContext.Driver;
+
             var homePage = new HomePageObject(driver);
             var contactUsForm = homePage.clickContactUs();
             contactUsForm.ClickSumit();

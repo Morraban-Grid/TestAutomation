@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TestAutomation.Tests.PageObjectPattern.PageObject.ContactUs
 {
-    internal class ContactUsPageObject
+    public class ContactUsPageObject
     {
         private IWebDriver driver;
         // Propiedades de los elementos del formulario de contacto
